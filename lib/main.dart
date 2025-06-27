@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:fquery/fquery.dart';
 import "weather.dart";
 
 void main() {
-  runApp(const App());
+  runApp(QueryClientProvider(queryClient: QueryClient(), child: const App()));
 }
 
 class App extends StatelessWidget {

@@ -1,64 +1,59 @@
 import 'package:flutter/material.dart';
-import 'package:weather/constants.dart';
-import 'services/observations.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:fquery/fquery.dart';
+import 'package:weather/components/error-message/main.dart';
+import 'package:weather/components/loading-indicator/main.dart';
+import 'package:weather/observations.dart';
 import 'services/forecasts.dart';
+import 'services/observations.dart';
 
-class Weather extends StatefulWidget {
+class Weather extends HookWidget {
   const Weather({super.key});
 
   @override
-  State<Weather> createState() => WeatherState();
-}
-
-class WeatherState extends State<Weather> {
-  late String temperature = "";
-  late List<Forecast> forecasts = [];
-
-  @override
-  void initState() {
-    getWeatherObservations().then((responseTransform) {
-      setState(() {
-        temperature = responseTransform;
-      });
-    });
-
-    getWeatherForecasts().then((responseTransform) {
-      setState(() {
-        forecasts = responseTransform;
-      });
-    });
-
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Color.from(alpha: 1, red: 0.1, green: 0.1, blue: 0.1),
-      body: Center(
-        child: Flex(
-          direction: Axis.vertical,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              "$temperature°C",
-              style: const TextStyle(
-                color: Color.from(alpha: 0.7, red: 1, green: 1, blue: 1),
-                fontSize: 60,
-                fontFamily: "Inter",
-              ),
+    final observations = useQuery(
+      ["observations"],
+      getWeatherObservations,
+      refetchInterval: const Duration(minutes: 5),
+    );
+    final forecasts = useQuery(
+      ["forecasts"],
+      getWeatherForecasts,
+      refetchInterval: const Duration(minutes: 5),
+    );
+
+    return Builder(
+      builder: (context) {
+        if (observations.isLoading || forecasts.isLoading) {
+          return Center(child: LoadingIndicator());
+        }
+
+        if (observations.isError || forecasts.isError) {
+          return Center(child: ErrorMessage(message: "There was an error."));
+        }
+
+        return Scaffold(
+          backgroundColor: Color.from(
+            alpha: 1,
+            red: 0.1,
+            green: 0.1,
+            blue: 0.1,
+          ),
+          body: Center(
+            child: Flex(
+              direction: Axis.vertical,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Observations(
+                  temperature: observations.data,
+                  weatherSymbol: forecasts.data?.firstOrNull?.weatherSymbol,
+                ),
+              ],
             ),
-            Text(
-              getWeatherString(forecasts.firstOrNull?.weatherSymbol),
-              style: const TextStyle(
-                color: Color.from(alpha: 0.5, red: 1, green: 1, blue: 1),
-                fontSize: 20,
-                fontFamily: "Inter",
-              ),
-            ),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
 }

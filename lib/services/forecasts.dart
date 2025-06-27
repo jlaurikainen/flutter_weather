@@ -18,12 +18,13 @@ class Forecast {
   });
 }
 
-const String observationQuery =
+const String forecastsQuery =
     "${baseUrl}fmi::forecast::edited::weather::scandinavia::point::multipointcoverage";
 
 List<Forecast> parseXML(String xml) {
   var doc = xml_parser.XmlDocument.parse(xml);
 
+  // Get timestamps from the positions elements
   var positionsString = doc
       .findAllElements("gmlcov:positions")
       .first
@@ -35,6 +36,7 @@ List<Forecast> parseXML(String xml) {
       .toList();
   var timeStamps = positionLines.map((line) => line.split(" ").last).toList();
 
+  // Get forecast values
   var forecastValuesString = doc
       .findAllElements("gml:doubleOrNilReasonTupleList")
       .first
@@ -46,6 +48,7 @@ List<Forecast> parseXML(String xml) {
       .toList();
   var forecastValues = forecastLines.map((line) => line.split(" ")).toList();
 
+  // Get indexes of fields for wanted values
   var fieldNames = doc
       .findAllElements("swe:field")
       .map((field) => field.getAttribute("name"))
@@ -88,7 +91,7 @@ Future<List<Forecast>> getWeatherForecasts() async {
 
   final response = await http.get(
     Uri.parse(
-      "$observationQuery&place=Lahti&starttime=$startTimeString&endtime=$endTimeString",
+      "$forecastsQuery&place=Lahti&starttime=$startTimeString&endtime=$endTimeString",
     ),
   );
 

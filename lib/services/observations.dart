@@ -3,7 +3,7 @@ import "package:intl/intl.dart";
 import "package:xml/xml.dart" as xml_parser;
 import "../constants.dart";
 
-const String observationQuery =
+const String observationsQuery =
     "${baseUrl}fmi::observations::weather::timevaluepair";
 
 String parseXML(String xml) {
@@ -27,7 +27,7 @@ Future<String> getWeatherObservations() async {
       .toIso8601String();
 
   final response = await http.get(
-    Uri.parse("$observationQuery&place=Lahti&starttime=$startTime"),
+    Uri.parse("$observationsQuery&place=Lahti&starttime=$startTime"),
   );
 
   if (response.statusCode == 200) {

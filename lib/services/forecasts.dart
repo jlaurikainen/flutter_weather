@@ -1,6 +1,14 @@
 import "package:http/http.dart" as http;
+import "package:location/location.dart";
 import "package:xml/xml.dart" as xml_parser;
 import "../constants.dart";
+
+class Forecasts {
+  final List<Forecast> forecasts;
+  final String? geoid;
+
+  Forecasts({required this.forecasts, required this.geoid});
+}
 
 class Forecast {
   final double temperature;
@@ -21,7 +29,7 @@ class Forecast {
 const String forecastsQuery =
     "${baseUrl}fmi::forecast::edited::weather::scandinavia::point::multipointcoverage";
 
-List<Forecast> parseXML(String xml) {
+Forecasts parseXML(String xml) {
   var doc = xml_parser.XmlDocument.parse(xml);
 
   // Get timestamps from the positions elements
@@ -76,10 +84,12 @@ List<Forecast> parseXML(String xml) {
     );
   }
 
-  return forecasts;
+  var geoid = doc.findAllElements("gml:identifier").first.innerText;
+
+  return Forecasts(forecasts: forecasts, geoid: geoid);
 }
 
-Future<List<Forecast>> getWeatherForecasts() async {
+Future<Forecasts> getWeatherForecasts(LocationData? location) async {
   var now = DateTime.now();
   var starTime = now
       .copyWith(minute: 0, second: 0, millisecond: 0, microsecond: 0)
@@ -91,7 +101,7 @@ Future<List<Forecast>> getWeatherForecasts() async {
 
   final response = await http.get(
     Uri.parse(
-      "$forecastsQuery&place=Lahti&starttime=$startTimeString&endtime=$endTimeString",
+      "$forecastsQuery&starttime=$startTimeString&endtime=$endTimeString&latlon=${location?.latitude},${location?.longitude}",
     ),
   );
 

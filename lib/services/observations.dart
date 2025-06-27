@@ -18,7 +18,7 @@ String parseXML(String xml) {
   ).format(temperature);
 }
 
-Future<String> getWeatherObservations() async {
+Future<String> getWeatherObservations(String? geoid) async {
   var now = DateTime.now();
   var startTime = now
       .copyWith(second: 0, millisecond: 0, microsecond: 0)
@@ -27,7 +27,7 @@ Future<String> getWeatherObservations() async {
       .toIso8601String();
 
   final response = await http.get(
-    Uri.parse("$observationsQuery&place=Lahti&starttime=$startTime"),
+    Uri.parse("$observationsQuery&starttime=$startTime&geoid=$geoid"),
   );
 
   if (response.statusCode == 200) {

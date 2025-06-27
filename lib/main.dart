@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fquery/fquery.dart';
-import 'package:location/location.dart';
 import "weather.dart";
+import "package:geolocator/geolocator.dart";
 
 void main() {
   runApp(QueryClientProvider(queryClient: QueryClient(), child: const App()));
@@ -15,33 +15,28 @@ class App extends StatefulWidget {
 }
 
 class AppState extends State<App> {
-  Location location = Location();
   bool serviceEnabled = false;
-  PermissionStatus? permissionGranted;
-  LocationData? locationData;
+  LocationPermission? permissionGranted;
+  Position? locationData;
 
   Future<void> requestLocationPermission() async {
-    serviceEnabled = await location.serviceEnabled();
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
 
     if (!serviceEnabled) {
-      serviceEnabled = await location.requestService();
+      return;
+    }
 
-      if (!serviceEnabled) {
+    permissionGranted = await Geolocator.checkPermission();
+
+    if (permissionGranted == LocationPermission.denied) {
+      permissionGranted = await Geolocator.requestPermission();
+
+      if (permissionGranted == LocationPermission.denied) {
         return;
       }
     }
 
-    permissionGranted = await location.hasPermission();
-
-    if (permissionGranted == PermissionStatus.denied) {
-      permissionGranted = await location.requestPermission();
-
-      if (permissionGranted != PermissionStatus.granted) {
-        return;
-      }
-    }
-
-    locationData = await location.getLocation();
+    locationData = await Geolocator.getCurrentPosition();
 
     setState(() {});
   }
@@ -63,7 +58,7 @@ class AppState extends State<App> {
       );
     }
 
-    if (permissionGranted == PermissionStatus.denied) {
+    if (permissionGranted == LocationPermission.denied) {
       return MaterialApp(
         darkTheme: ThemeData.dark(),
         themeMode: ThemeMode.dark,

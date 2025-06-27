@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:fquery/fquery.dart';
-import 'package:location/location.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:weather/components/error-message/main.dart';
 import 'package:weather/components/loading-indicator/main.dart';
 import 'package:weather/observations.dart';
@@ -9,7 +9,7 @@ import 'services/forecasts.dart';
 import 'services/observations.dart';
 
 class Weather extends HookWidget {
-  final LocationData? locationData;
+  final Position? locationData;
 
   const Weather({super.key, required this.locationData});
 

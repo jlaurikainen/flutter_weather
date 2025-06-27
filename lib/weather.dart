@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:fquery/fquery.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:weather/components/error-message/main.dart';
-import 'package:weather/components/loading-indicator/main.dart';
+import 'package:weather/components/error_message/main.dart';
+import 'package:weather/components/loading_indicator/main.dart';
+import 'package:weather/forecast_list.dart';
 import 'package:weather/observations.dart';
 import 'services/forecasts.dart';
 import 'services/observations.dart';
@@ -40,20 +41,18 @@ class Weather extends HookWidget {
           return Center(child: ErrorMessage(message: "There was an error."));
         }
 
-        return Scaffold(
-          body: Center(
-            child: Flex(
-              direction: Axis.vertical,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Observations(
-                  temperature: observations.data,
-                  weatherSymbol:
-                      forecasts.data?.forecasts.firstOrNull?.weatherSymbol,
-                ),
-              ],
+        return Flex(
+          direction: Axis.vertical,
+          mainAxisAlignment: MainAxisAlignment.center,
+          spacing: 32,
+          children: [
+            Observations(
+              temperature: observations.data,
+              weatherSymbol:
+                  forecasts.data?.forecasts.firstOrNull?.weatherSymbol,
             ),
-          ),
+            ForecastList(forecasts: forecasts.data?.forecasts),
+          ],
         );
       },
     );

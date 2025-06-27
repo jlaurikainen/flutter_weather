@@ -1,10 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:fquery/fquery.dart';
-import "weather.dart";
 import "package:geolocator/geolocator.dart";
+import 'package:weather/components/loading_indicator/main.dart';
+import 'package:weather/utils/location.dart';
+import "weather.dart";
 
 void main() {
-  runApp(QueryClientProvider(queryClient: QueryClient(), child: const App()));
+  runApp(
+    QueryClientProvider(
+      queryClient: QueryClient(),
+      child: MaterialApp(
+        darkTheme: ThemeData.dark(),
+        themeMode: ThemeMode.dark,
+        home: Material(child: App()),
+      ),
+    ),
+  );
 }
 
 class App extends StatefulWidget {
@@ -15,69 +26,40 @@ class App extends StatefulWidget {
 }
 
 class AppState extends State<App> {
-  bool serviceEnabled = false;
   LocationPermission? permissionGranted;
   Position? locationData;
 
-  Future<void> requestLocationPermission() async {
-    serviceEnabled = await Geolocator.isLocationServiceEnabled();
-
-    if (!serviceEnabled) {
-      return;
-    }
-
-    permissionGranted = await Geolocator.checkPermission();
-
-    if (permissionGranted == LocationPermission.denied) {
-      permissionGranted = await Geolocator.requestPermission();
-
-      if (permissionGranted == LocationPermission.denied) {
-        return;
-      }
-    }
-
-    locationData = await Geolocator.getCurrentPosition();
-
-    setState(() {});
+  void getLocation() {
+    requestLocationPermission().then((location) {
+      setState(() {
+        locationData = location.locationData;
+        permissionGranted = location.permissionGranted;
+      });
+    });
   }
 
   @override
   void initState() {
     super.initState();
 
-    requestLocationPermission();
+    getLocation();
   }
 
   @override
   Widget build(BuildContext context) {
     if (permissionGranted == null) {
-      return MaterialApp(
-        darkTheme: ThemeData.dark(),
-        themeMode: ThemeMode.dark,
-        home: Center(),
-      );
+      return Center(child: LoadingIndicator());
     }
 
     if (permissionGranted == LocationPermission.denied) {
-      return MaterialApp(
-        darkTheme: ThemeData.dark(),
-        themeMode: ThemeMode.dark,
-        home: Center(
-          child: ElevatedButton(
-            onPressed: requestLocationPermission,
-            child: const Text("Request Location Permission"),
-          ),
+      return Center(
+        child: FilledButton(
+          onPressed: getLocation,
+          child: Text("Request Location"),
         ),
       );
     }
 
-    return QueryClientProvider(
-      queryClient: QueryClient(),
-      child: MaterialApp(
-        darkTheme: ThemeData.dark(),
-        themeMode: ThemeMode.dark,
-        home: Weather(locationData: locationData),
-      ),
-    );
+    return Weather(locationData: locationData);
   }
 }

@@ -1,7 +1,7 @@
 import "package:geolocator/geolocator.dart";
 import "package:http/http.dart" as http;
+import "package:weather/constants.dart";
 import "package:xml/xml.dart" as xml_parser;
-import "../constants.dart";
 
 class Forecasts {
   final List<Forecast> forecasts;
@@ -90,11 +90,10 @@ Forecasts parseXML(String xml) {
 }
 
 Future<Forecasts> getWeatherForecasts(Position? location) async {
-  var now = DateTime.now();
+  var now = DateTime.now().toUtc();
   var starTime = now
       .copyWith(minute: 0, second: 0, millisecond: 0, microsecond: 0)
-      .subtract(const Duration(hours: 1))
-      .toUtc();
+      .add(const Duration(hours: 1));
   var startTimeString = starTime.toIso8601String();
   var endTime = starTime.copyWith(day: starTime.day + 1);
   var endTimeString = endTime.toIso8601String();

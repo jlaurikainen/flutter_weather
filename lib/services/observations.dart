@@ -1,7 +1,7 @@
 import "package:http/http.dart" as http;
-import "package:intl/intl.dart";
+import "package:weather/constants.dart";
+import "package:weather/utils/number.dart";
 import "package:xml/xml.dart" as xml_parser;
-import "../constants.dart";
 
 const String observationsQuery =
     "${baseUrl}fmi::observations::weather::timevaluepair";
@@ -12,10 +12,7 @@ String parseXML(String xml) {
   var latestObservation = obervationsList.findAllElements("wml2:value").last;
   var temperature = double.parse(latestObservation.innerText);
 
-  return NumberFormat.decimalPatternDigits(
-    decimalDigits: 1,
-    locale: "fi_FI",
-  ).format(temperature);
+  return decimalFormat(temperature);
 }
 
 Future<String> getWeatherObservations(String? geoid) async {

@@ -20,7 +20,7 @@ class Weather extends HookWidget {
     final forecasts = useQuery(
       ["forecasts"],
       () => getWeatherForecasts(locationData),
-      refetchInterval: const Duration(minutes: 5),
+      refetchInterval: const Duration(minutes: 15),
       enabled: locationData != null,
     );
 

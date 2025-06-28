@@ -12,7 +12,7 @@ class Forecasts {
 
 class Forecast {
   final double temperature;
-  final int time;
+  final DateTime time;
   final int weatherSymbol;
   final double windDirection;
   final double windSpeedMS;
@@ -76,7 +76,9 @@ Forecasts parseXML(String xml) {
     forecasts.add(
       Forecast(
         temperature: double.parse(forecastValue[valueIndexes[0]]),
-        time: int.parse(timeStamps[i]),
+        time: DateTime.fromMillisecondsSinceEpoch(
+          int.parse(timeStamps[i]) * 1000,
+        ),
         weatherSymbol: double.parse(forecastValue[valueIndexes[3]]).round(),
         windDirection: double.parse(forecastValue[valueIndexes[1]]),
         windSpeedMS: double.parse(forecastValue[valueIndexes[2]]),
@@ -91,11 +93,14 @@ Forecasts parseXML(String xml) {
 
 Future<Forecasts> getWeatherForecasts(Position? location) async {
   var now = DateTime.now().toUtc();
-  var starTime = now
-      .copyWith(minute: 0, second: 0, millisecond: 0, microsecond: 0)
-      .add(const Duration(hours: 1));
+  var starTime = now.copyWith(
+    minute: 0,
+    second: 0,
+    millisecond: 0,
+    microsecond: 0,
+  );
   var startTimeString = starTime.toIso8601String();
-  var endTime = starTime.copyWith(day: starTime.day + 1);
+  var endTime = starTime.copyWith(day: starTime.day + 3);
   var endTimeString = endTime.toIso8601String();
 
   final response = await http.get(

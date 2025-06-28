@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:weather/components/weather_text/main.dart';
 import 'package:weather/constants.dart';
 
 class Observations extends StatelessWidget {
@@ -17,21 +18,11 @@ class Observations extends StatelessWidget {
       direction: Axis.vertical,
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Text(
-          "$temperature°C",
-          style: const TextStyle(
-            color: Color.from(alpha: 0.7, red: 1, green: 1, blue: 1),
-            fontSize: 60,
-            fontFamily: "Inter",
-          ),
-        ),
-        Text(
-          getWeatherString(weatherSymbol),
-          style: const TextStyle(
-            color: Color.from(alpha: 0.5, red: 1, green: 1, blue: 1),
-            fontSize: 20,
-            fontFamily: "Inter",
-          ),
+        WeatherText(fontSize: 60, text: "$temperature°C"),
+        WeatherText(
+          fontSize: 20,
+          secondary: true,
+          text: getWeatherString(weatherSymbol),
         ),
       ],
     );

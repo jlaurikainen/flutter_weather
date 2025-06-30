@@ -1,3 +1,6 @@
+import 'package:flutter/material.dart';
+import 'package:material_symbols_icons/symbols.dart';
+
 const String baseUrl =
     "https://opendata.fmi.fi/wfs?service=WFS&version=2.0.0&request=getFeature&storedquery_id=";
 
@@ -33,4 +36,38 @@ const Map<int, String> weatherStrings = {
 
 String getWeatherString(int? code) {
   return weatherStrings[code] ?? "";
+}
+
+const Map<int, IconData> weatherIcons = {
+  1: Symbols.clear_day,
+  2: Symbols.partly_cloudy_day,
+  3: Symbols.cloud,
+  21: Symbols.rainy,
+  22: Symbols.rainy,
+  23: Symbols.rainy,
+  31: Symbols.rainy,
+  32: Symbols.rainy,
+  33: Symbols.rainy,
+  41: Symbols.weather_snowy,
+  42: Symbols.weather_snowy,
+  43: Symbols.weather_snowy,
+  51: Symbols.weather_snowy,
+  52: Symbols.weather_snowy,
+  53: Symbols.weather_snowy,
+  61: Symbols.thunderstorm,
+  62: Symbols.thunderstorm,
+  63: Symbols.thunderstorm,
+  64: Symbols.thunderstorm,
+  71: Symbols.weather_hail,
+  72: Symbols.weather_hail,
+  73: Symbols.weather_hail,
+  81: Symbols.weather_hail,
+  82: Symbols.weather_hail,
+  83: Symbols.weather_hail,
+  91: Symbols.mist,
+  92: Symbols.foggy,
+};
+
+dynamic getWeatherIcon(int weatherSymbol) {
+  return weatherIcons[weatherSymbol];
 }

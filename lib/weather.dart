@@ -4,7 +4,7 @@ import 'package:fquery/fquery.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:weather/components/error_message/main.dart';
 import 'package:weather/components/loading_indicator/main.dart';
-import 'package:weather/daily_forecast.dart';
+import 'package:weather/daily_forecasts.dart';
 import 'package:weather/forecast_list.dart';
 import 'package:weather/observations.dart';
 import 'services/forecasts.dart';
@@ -52,8 +52,8 @@ class Weather extends HookWidget {
               weatherSymbol:
                   forecasts.data?.forecasts.firstOrNull?.weatherSymbol,
             ),
-            ForecastList(forecasts: forecasts.data?.forecasts),
-            DailyForecast(forecasts: forecasts.data?.forecasts),
+            ForecastList(forecasts: forecasts.data?.forecasts ?? []),
+            DailyForecasts(forecasts: forecasts.data?.forecasts ?? []),
           ],
         );
       },

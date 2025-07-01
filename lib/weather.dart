@@ -42,18 +42,22 @@ class Weather extends HookWidget {
           return Center(child: ErrorMessage(message: "There was an error."));
         }
 
-        return Flex(
-          direction: Axis.vertical,
-          mainAxisAlignment: MainAxisAlignment.center,
-          spacing: 32,
+        return Column(
           children: [
             Observations(
               temperature: observations.data,
               weatherSymbol:
                   forecasts.data?.forecasts.firstOrNull?.weatherSymbol,
             ),
-            ForecastList(forecasts: forecasts.data?.forecasts ?? []),
-            DailyForecasts(forecasts: forecasts.data?.forecasts ?? []),
+            Flex(
+              direction: Axis.vertical,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              spacing: 32,
+              children: [
+                ForecastList(forecasts: forecasts.data?.forecasts ?? []),
+                DailyForecasts(forecasts: forecasts.data?.forecasts ?? []),
+              ],
+            ),
           ],
         );
       },

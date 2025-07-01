@@ -14,17 +14,34 @@ class Observations extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Flex(
-      direction: Axis.vertical,
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        WeatherText(fontSize: 60, text: "$temperature°C"),
-        WeatherText(
-          fontSize: 20,
-          secondary: true,
-          text: getWeatherString(weatherSymbol),
+    return Flexible(
+      child: AspectRatio(
+        aspectRatio: 1 / 1,
+        child: Stack(
+          alignment: AlignmentDirectional.center,
+          children: [
+            Positioned(
+              child: Icon(
+                getWeatherIcon(weatherSymbol!),
+                color: Color.fromARGB(255, 33, 33, 33),
+                size: 240,
+              ),
+            ),
+            Flex(
+              direction: Axis.vertical,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                WeatherText(fontSize: 60, text: "$temperature°C"),
+                WeatherText(
+                  fontSize: 20,
+                  secondary: true,
+                  text: getWeatherString(weatherSymbol),
+                ),
+              ],
+            ),
+          ],
         ),
-      ],
+      ),
     );
   }
 }

@@ -31,7 +31,7 @@ class Observations extends StatelessWidget {
               direction: Axis.vertical,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                WeatherText(fontSize: 60, text: "$temperature°C"),
+                WeatherText(fontSize: 60, text: "$temperature°C", thin: true),
                 WeatherText(
                   fontSize: 20,
                   secondary: true,

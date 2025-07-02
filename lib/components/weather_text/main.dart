@@ -4,12 +4,14 @@ class WeatherText extends StatelessWidget {
   final String text;
   final double? fontSize;
   final bool? secondary;
+  final bool? thin;
 
   const WeatherText({
     super.key,
     required this.text,
     this.fontSize,
     this.secondary = false,
+    this.thin = false,
   });
 
   @override
@@ -23,8 +25,11 @@ class WeatherText extends StatelessWidget {
           green: 1,
           blue: 1,
         ),
-        fontFamily: "Inter",
+        fontFamily: "Montserrat",
         fontSize: fontSize,
+        fontVariations: <FontVariation>[
+          FontVariation('wght', thin == true ? 100 : 200),
+        ],
       ),
     );
   }

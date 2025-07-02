@@ -49,14 +49,16 @@ class Weather extends HookWidget {
               weatherSymbol:
                   forecasts.data?.forecasts.firstOrNull?.weatherSymbol,
             ),
-            Flex(
-              direction: Axis.vertical,
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              spacing: 32,
-              children: [
-                ForecastList(forecasts: forecasts.data?.forecasts ?? []),
-                DailyForecasts(forecasts: forecasts.data?.forecasts ?? []),
-              ],
+            Flexible(
+              child: Flex(
+                direction: Axis.vertical,
+                mainAxisAlignment: MainAxisAlignment.center,
+                spacing: 32,
+                children: [
+                  ForecastList(forecasts: forecasts.data?.forecasts ?? []),
+                  DailyForecasts(forecasts: forecasts.data?.forecasts ?? []),
+                ],
+              ),
             ),
           ],
         );

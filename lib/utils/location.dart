@@ -28,7 +28,7 @@ Future<LocationState> requestLocationPermission() async {
   }
 
   return LocationState(
-    locationData: await Geolocator.getLastKnownPosition(),
+    locationData: await Geolocator.getCurrentPosition(),
     permissionGranted: permissionGranted,
   );
 }

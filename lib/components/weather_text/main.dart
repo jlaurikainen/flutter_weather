@@ -28,7 +28,7 @@ class WeatherText extends StatelessWidget {
         fontFamily: "Montserrat",
         fontSize: fontSize,
         fontVariations: <FontVariation>[
-          FontVariation('wght', thin == true ? 100 : 200),
+          FontVariation('wght', thin == true ? 200 : 300),
         ],
       ),
     );

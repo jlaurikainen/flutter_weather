@@ -15,6 +15,7 @@ class Observations extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Flexible(
+      flex: 1,
       child: AspectRatio(
         aspectRatio: 1 / 1,
         child: Stack(

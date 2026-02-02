@@ -3,7 +3,6 @@ import 'package:geolocator/geolocator.dart';
 class LocationState {
   Position? locationData;
   LocationPermission? permissionGranted;
-
   LocationState({this.locationData, this.permissionGranted});
 }
 
@@ -28,7 +27,9 @@ Future<LocationState> requestLocationPermission() async {
   }
 
   return LocationState(
-    locationData: await Geolocator.getCurrentPosition(),
+    locationData:
+        await Geolocator.getLastKnownPosition() ??
+        await Geolocator.getCurrentPosition(),
     permissionGranted: permissionGranted,
   );
 }
